@@ -98,7 +98,7 @@ class ThreadList extends ConsumerWidget {
                 ),
                 ListTile(
                   leading: Icon(
-                    FluentIcons.sign_out_24_regular,
+                    FluentIcons.arrow_exit_20_regular,
                     color: AppColors.error,
                   ),
                   title: Text(

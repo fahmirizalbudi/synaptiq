@@ -111,7 +111,8 @@ class _MessageComposerState extends State<MessageComposer> {
     return IconButton(
       onPressed: (_hasText && widget.enabled) ? _handleSend : null,
       icon: Icon(
-        FluentIcons.arrow_up_24_filled,
+        FluentIcons.send_20_filled,
+        size: 20.sp,
         color: (_hasText && widget.enabled)
             ? AppColors.background
             : AppColors.textSecondary,

@@ -190,7 +190,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               await ref.read(authNotifierProvider.notifier).signOut();
               if (context.mounted) context.go('/login');
             },
-            icon: Icon(FluentIcons.sign_out_24_regular, color: AppColors.error),
+            icon: Icon(FluentIcons.arrow_exit_20_regular, color: AppColors.error),
             label: const Text(
               'Sign Out',
               style: TextStyle(color: AppColors.error),
