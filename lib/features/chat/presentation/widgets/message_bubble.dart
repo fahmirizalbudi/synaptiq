@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -69,24 +70,28 @@ class MessageBubble extends StatelessWidget {
     switch (message.state) {
       case MessageState.pending:
         return Icon(
-          Icons.access_time,
+          FluentIcons.clock_24_regular,
           size: 12.sp,
           color: AppColors.background.withValues(alpha: 0.6),
         );
       case MessageState.sent:
         return Icon(
-          Icons.check,
+          FluentIcons.checkmark_24_regular,
           size: 12.sp,
           color: AppColors.background.withValues(alpha: 0.6),
         );
       case MessageState.synced:
         return Icon(
-          Icons.done_all,
+          FluentIcons.checkmark_circle_24_regular,
           size: 12.sp,
           color: AppColors.background.withValues(alpha: 0.6),
         );
       case MessageState.failed:
-        return Icon(Icons.error_outline, size: 12.sp, color: AppColors.error);
+        return Icon(
+          FluentIcons.error_circle_24_regular,
+          size: 12.sp,
+          color: AppColors.error,
+        );
       default:
         return const SizedBox.shrink();
     }

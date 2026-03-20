@@ -1,9 +1,12 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../domain/entities/thread_entity.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 import '../providers/chat_providers.dart';
 
 class ThreadList extends ConsumerWidget {
@@ -21,6 +24,7 @@ class ThreadList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final threadsAsync = ref.watch(threadsProvider);
+    final user = ref.watch(authStateProvider).valueOrNull;
 
     return Column(
       children: [
@@ -30,12 +34,11 @@ class ThreadList extends ConsumerWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: onNewChat,
-              icon: const Icon(Icons.add, size: 20),
+              icon: Icon(FluentIcons.add_24_regular, size: 20),
               label: const Text('New Chat'),
             ),
           ),
         ),
-        const Divider(height: 1, color: AppColors.border),
         Expanded(
           child: threadsAsync.when(
             data: (threads) {
@@ -45,7 +48,7 @@ class ThreadList extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        Icons.chat_bubble_outline,
+                        FluentIcons.chat_24_regular,
                         size: 48.sp,
                         color: AppColors.textSecondary,
                       ),
@@ -62,9 +65,10 @@ class ThreadList extends ConsumerWidget {
                 );
               }
               return ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
                 itemCount: threads.length,
                 itemBuilder: (context, index) =>
-                    _buildThreadTile(context, threads[index]),
+                    _buildThreadTile(context, ref, threads[index]),
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
@@ -76,35 +80,127 @@ class ThreadList extends ConsumerWidget {
             ),
           ),
         ),
+        Padding(
+          padding: EdgeInsets.all(16.w),
+          child: Column(
+            children: [
+              if (user != null) ...[
+                ListTile(
+                  leading: Icon(
+                    FluentIcons.settings_24_regular,
+                    color: AppColors.textSecondary,
+                  ),
+                  title: Text('Settings', style: TextStyle(fontSize: 14.sp)),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    context.go('/settings');
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    FluentIcons.sign_out_24_regular,
+                    color: AppColors.error,
+                  ),
+                  title: Text(
+                    'Sign Out',
+                    style: TextStyle(color: AppColors.error, fontSize: 14.sp),
+                  ),
+                  onTap: () async {
+                    Navigator.of(context).pop();
+                    await ref.read(authNotifierProvider.notifier).signOut();
+                  },
+                ),
+              ],
+            ],
+          ),
+        ),
       ],
     );
   }
 
-  Widget _buildThreadTile(BuildContext context, ThreadEntity thread) {
+  void _confirmDelete(
+    BuildContext context,
+    WidgetRef ref,
+    ThreadEntity thread,
+  ) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Chat'),
+        content: Text('Delete "${thread.title}"?\nThis cannot be undone.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              final user = ref.read(authStateProvider).valueOrNull;
+              if (user == null) return;
+              final repo = ref.read(firestoreChatRepositoryProvider);
+              await repo.deleteThread(user.uid, thread.id);
+              final currentId = ref.read(currentThreadIdProvider);
+              if (currentId == thread.id) {
+                ref.read(currentThreadIdProvider.notifier).state = null;
+              }
+            },
+            child: Text('Delete', style: TextStyle(color: AppColors.error)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildThreadTile(
+    BuildContext context,
+    WidgetRef ref,
+    ThreadEntity thread,
+  ) {
     final isSelected = thread.id == selectedThreadId;
-    return ListTile(
-      selected: isSelected,
-      selectedTileColor: AppColors.surfaceVariant,
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
-      title: Text(
-        thread.title,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-          color: AppColors.textPrimary,
-          fontSize: 14.sp,
-          fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+    return Padding(
+      padding: EdgeInsets.only(bottom: 4.h),
+      child: Dismissible(
+        key: Key(thread.id),
+        direction: DismissDirection.endToStart,
+        confirmDismiss: (_) async {
+          _confirmDelete(context, ref, thread);
+          return false;
+        },
+        background: Container(
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.only(right: 16.w),
+          decoration: BoxDecoration(
+            color: AppColors.error.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          child: Icon(FluentIcons.delete_24_regular, color: AppColors.error),
+        ),
+        child: ListTile(
+          selected: isSelected,
+          selectedTileColor: AppColors.surfaceVariant,
+          title: Text(
+            thread.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 14.sp,
+              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            ),
+          ),
+          subtitle: Text(
+            '${thread.messageCount} messages',
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 12.sp),
+          ),
+          trailing: Text(
+            _formatDate(thread.updatedAt),
+            style: TextStyle(color: AppColors.textSecondary, fontSize: 11.sp),
+          ),
+          onTap: () => onThreadSelected(thread.id),
+          onLongPress: () => _confirmDelete(context, ref, thread),
         ),
       ),
-      subtitle: Text(
-        '${thread.messageCount} messages',
-        style: TextStyle(color: AppColors.textSecondary, fontSize: 12.sp),
-      ),
-      trailing: Text(
-        _formatDate(thread.updatedAt),
-        style: TextStyle(color: AppColors.textSecondary, fontSize: 11.sp),
-      ),
-      onTap: () => onThreadSelected(thread.id),
     );
   }
 

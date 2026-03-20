@@ -14,18 +14,24 @@ class ApiKeyNotifier extends StateNotifier<String?> {
   }
 
   Future<void> _load() async {
-    final box = await Hive.openBox(_boxName);
+    final box = Hive.isBoxOpen(_boxName)
+        ? Hive.box(_boxName)
+        : await Hive.openBox(_boxName);
     state = box.get(_keyField) as String?;
   }
 
   Future<void> setKey(String key) async {
-    final box = await Hive.openBox(_boxName);
+    final box = Hive.isBoxOpen(_boxName)
+        ? Hive.box(_boxName)
+        : await Hive.openBox(_boxName);
     await box.put(_keyField, key);
     state = key;
   }
 
   Future<void> clearKey() async {
-    final box = await Hive.openBox(_boxName);
+    final box = Hive.isBoxOpen(_boxName)
+        ? Hive.box(_boxName)
+        : await Hive.openBox(_boxName);
     await box.delete(_keyField);
     state = null;
   }

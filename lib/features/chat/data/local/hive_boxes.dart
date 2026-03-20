@@ -19,6 +19,7 @@ class HiveBoxes {
       Hive.openBox<ThreadHiveDto>(threads),
       Hive.openBox<MessageHiveDto>(messages),
       Hive.openBox<PendingActionHiveDto>(pendingActions),
+      Hive.openBox('settings'),
     ]);
   }
 

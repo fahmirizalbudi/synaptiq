@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -40,47 +41,53 @@ class _MessageComposerState extends State<MessageComposer> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 8.h, 8.w, 8.h),
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
-        border: Border(top: BorderSide(color: AppColors.border)),
-      ),
+      padding: EdgeInsets.fromLTRB(12.w, 8.h, 8.w, 16.h),
+      color: AppColors.background,
       child: SafeArea(
         top: false,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _controller,
-                enabled: widget.enabled,
-                maxLines: 5,
-                minLines: 1,
-                textInputAction: TextInputAction.newline,
-                onChanged: (v) =>
-                    setState(() => _hasText = v.trim().isNotEmpty),
-                style: TextStyle(color: AppColors.textPrimary, fontSize: 14.sp),
-                decoration: InputDecoration(
-                  hintText: 'Message Nirmala...',
-                  hintStyle: TextStyle(
-                    color: AppColors.textSecondary,
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(16.r),
+          ),
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _controller,
+                  enabled: widget.enabled,
+                  maxLines: 5,
+                  minLines: 1,
+                  textInputAction: TextInputAction.newline,
+                  onChanged: (v) =>
+                      setState(() => _hasText = v.trim().isNotEmpty),
+                  style: TextStyle(
+                    color: AppColors.textPrimary,
                     fontSize: 14.sp,
                   ),
-                  border: InputBorder.none,
-                  enabledBorder: InputBorder.none,
-                  focusedBorder: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 10.h,
+                  decoration: InputDecoration(
+                    hintText: 'Message Nirmala...',
+                    hintStyle: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14.sp,
+                    ),
+                    border: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(
+                      horizontal: 12.w,
+                      vertical: 10.h,
+                    ),
+                    filled: false,
                   ),
-                  filled: true,
-                  fillColor: AppColors.surfaceVariant,
                 ),
               ),
-            ),
-            SizedBox(width: 8.w),
-            _buildSendButton(),
-          ],
+              SizedBox(width: 4.w),
+              _buildSendButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -104,7 +111,7 @@ class _MessageComposerState extends State<MessageComposer> {
     return IconButton(
       onPressed: (_hasText && widget.enabled) ? _handleSend : null,
       icon: Icon(
-        Icons.arrow_upward,
+        FluentIcons.arrow_up_24_filled,
         color: (_hasText && widget.enabled)
             ? AppColors.background
             : AppColors.textSecondary,
@@ -116,7 +123,7 @@ class _MessageComposerState extends State<MessageComposer> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
-        minimumSize: Size(44.w, 44.h),
+        minimumSize: Size(40.w, 40.h),
       ),
     );
   }

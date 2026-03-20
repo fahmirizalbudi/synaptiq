@@ -4,8 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../core/constants/app_colors.dart';
 
-/// App theme configuration
-/// Dark theme with Material 3
 class AppTheme {
   AppTheme._();
 
@@ -28,7 +26,7 @@ class AppTheme {
         backgroundColor: AppColors.background,
         elevation: 0,
         centerTitle: true,
-        titleTextStyle: GoogleFonts.familjenGrotesk(
+        titleTextStyle: GoogleFonts.hostGrotesk(
           color: AppColors.textPrimary,
           fontSize: 18.sp,
           fontWeight: FontWeight.bold,
@@ -47,102 +45,128 @@ class AppTheme {
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16.r),
-          side: const BorderSide(color: AppColors.border),
         ),
       ),
-      dividerTheme: const DividerThemeData(
-        color: AppColors.border,
-        thickness: 1,
+      listTileTheme: ListTileThemeData(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
+      ),
+      dividerTheme: DividerThemeData(
+        color: AppColors.surfaceVariant,
+        thickness: 0.5,
+        space: 0,
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: AppColors.surfaceVariant,
-        contentTextStyle: GoogleFonts.inter(
+        contentTextStyle: GoogleFonts.hostGrotesk(
           color: AppColors.textPrimary,
           fontSize: 14.sp,
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.r),
+        ),
         behavior: SnackBarBehavior.floating,
+      ),
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.r),
+        ),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+        ),
+      ),
+      drawerTheme: DrawerThemeData(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.horizontal(right: Radius.circular(16.r)),
+        ),
       ),
     );
   }
 
   static TextTheme _buildTextTheme() {
-    return GoogleFonts.interTextTheme().copyWith(
-      displayLarge: GoogleFonts.familjenGrotesk(
+    return GoogleFonts.hostGroteskTextTheme().copyWith(
+      displayLarge: GoogleFonts.hostGrotesk(
         fontSize: 32.sp,
         fontWeight: FontWeight.bold,
         color: AppColors.textPrimary,
         letterSpacing: -0.5,
       ),
-      displayMedium: GoogleFonts.familjenGrotesk(
+      displayMedium: GoogleFonts.hostGrotesk(
         fontSize: 28.sp,
         fontWeight: FontWeight.bold,
         color: AppColors.textPrimary,
         letterSpacing: -0.5,
       ),
-      displaySmall: GoogleFonts.familjenGrotesk(
+      displaySmall: GoogleFonts.hostGrotesk(
         fontSize: 24.sp,
         fontWeight: FontWeight.bold,
         color: AppColors.textPrimary,
         letterSpacing: -0.5,
       ),
-      headlineLarge: GoogleFonts.familjenGrotesk(
+      headlineLarge: GoogleFonts.hostGrotesk(
         fontSize: 22.sp,
         fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       ),
-      headlineMedium: GoogleFonts.inter(
+      headlineMedium: GoogleFonts.hostGrotesk(
         fontSize: 18.sp,
         fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       ),
-      headlineSmall: GoogleFonts.inter(
+      headlineSmall: GoogleFonts.hostGrotesk(
         fontSize: 16.sp,
         fontWeight: FontWeight.w600,
         color: AppColors.textPrimary,
       ),
-      titleLarge: GoogleFonts.inter(
+      titleLarge: GoogleFonts.hostGrotesk(
         fontSize: 16.sp,
         fontWeight: FontWeight.w500,
         color: AppColors.textPrimary,
       ),
-      titleMedium: GoogleFonts.inter(
+      titleMedium: GoogleFonts.hostGrotesk(
         fontSize: 14.sp,
         fontWeight: FontWeight.w500,
         color: AppColors.textPrimary,
       ),
-      titleSmall: GoogleFonts.inter(
+      titleSmall: GoogleFonts.hostGrotesk(
         fontSize: 12.sp,
         fontWeight: FontWeight.w500,
         color: AppColors.textPrimary,
       ),
-      bodyLarge: GoogleFonts.inter(
+      bodyLarge: GoogleFonts.hostGrotesk(
         fontSize: 16.sp,
         fontWeight: FontWeight.normal,
         color: AppColors.textPrimary,
       ),
-      bodyMedium: GoogleFonts.inter(
+      bodyMedium: GoogleFonts.hostGrotesk(
         fontSize: 14.sp,
         fontWeight: FontWeight.normal,
         color: AppColors.textPrimary,
         letterSpacing: -0.14,
       ),
-      bodySmall: GoogleFonts.inter(
+      bodySmall: GoogleFonts.hostGrotesk(
         fontSize: 12.sp,
         fontWeight: FontWeight.normal,
         color: AppColors.textSecondary,
       ),
-      labelLarge: GoogleFonts.inter(
+      labelLarge: GoogleFonts.hostGrotesk(
         fontSize: 14.sp,
         fontWeight: FontWeight.w500,
         color: AppColors.textPrimary,
       ),
-      labelMedium: GoogleFonts.inter(
+      labelMedium: GoogleFonts.hostGrotesk(
         fontSize: 12.sp,
         fontWeight: FontWeight.w500,
         color: AppColors.textSecondary,
       ),
-      labelSmall: GoogleFonts.inter(
+      labelSmall: GoogleFonts.hostGrotesk(
         fontSize: 11.sp,
         fontWeight: FontWeight.w500,
         color: AppColors.textSecondary,
@@ -157,33 +181,36 @@ class AppTheme {
       contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.border),
+        borderSide: BorderSide.none,
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        borderSide: BorderSide.none,
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.error),
+        borderSide: BorderSide.none,
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12.r),
-        borderSide: const BorderSide(color: AppColors.error, width: 2),
+        borderSide: BorderSide.none,
       ),
-      hintStyle: GoogleFonts.inter(
+      hintStyle: GoogleFonts.hostGrotesk(
         fontSize: 14.sp,
         color: AppColors.textSecondary,
       ),
-      labelStyle: GoogleFonts.inter(
+      labelStyle: GoogleFonts.hostGrotesk(
         fontSize: 14.sp,
         color: AppColors.textSecondary,
       ),
-      errorStyle: GoogleFonts.inter(fontSize: 12.sp, color: AppColors.error),
+      errorStyle: GoogleFonts.hostGrotesk(
+        fontSize: 12.sp,
+        color: AppColors.error,
+      ),
     );
   }
 
@@ -197,7 +224,7 @@ class AppTheme {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
-        textStyle: GoogleFonts.inter(
+        textStyle: GoogleFonts.hostGrotesk(
           fontSize: 16.sp,
           fontWeight: FontWeight.w600,
         ),
@@ -210,13 +237,14 @@ class AppTheme {
     return OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         foregroundColor: AppColors.textPrimary,
+        backgroundColor: AppColors.surfaceVariant,
         minimumSize: Size(double.infinity, 52.h),
         padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.h),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.r),
         ),
-        side: const BorderSide(color: AppColors.border),
-        textStyle: GoogleFonts.inter(
+        side: BorderSide.none,
+        textStyle: GoogleFonts.hostGrotesk(
           fontSize: 16.sp,
           fontWeight: FontWeight.w600,
         ),
@@ -229,7 +257,8 @@ class AppTheme {
       style: TextButton.styleFrom(
         foregroundColor: AppColors.primary,
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-        textStyle: GoogleFonts.inter(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+        textStyle: GoogleFonts.hostGrotesk(
           fontSize: 14.sp,
           fontWeight: FontWeight.w500,
         ),
@@ -241,7 +270,7 @@ class AppTheme {
     return IconButtonThemeData(
       style: IconButton.styleFrom(
         foregroundColor: AppColors.iconPrimary,
-        minimumSize: Size(48.w, 48.h), // Meet touch target guidelines
+        minimumSize: Size(48.w, 48.h),
       ),
     );
   }

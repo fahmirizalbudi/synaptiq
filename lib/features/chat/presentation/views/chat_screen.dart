@@ -1,10 +1,13 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_constants.dart';
+import '../../../../core/providers/ai_providers.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../domain/entities/message_entity.dart';
 import '../providers/chat_providers.dart';
@@ -46,12 +49,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       ref.read(currentThreadIdProvider.notifier).state = threadId;
     }
 
-    final message = MessageEntity(
+    final userMessage = MessageEntity(
       id: const Uuid().v4(),
       threadId: threadId,
       role: 'user',
       content: MessageContent(type: MessageContentType.text, text: text),
       createdAt: DateTime.now().toUtc(),
+      state: MessageState.sent,
     );
 
     setState(() => _isSending = true);
@@ -59,7 +63,78 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       await repo.sendMessage(
         userId: user.uid,
         threadId: threadId,
-        message: message,
+        message: userMessage,
+      );
+      _scrollToBottom();
+
+      final aiService = ref.read(openRouterServiceProvider);
+      final contextBuilder = ref.read(contextBuilderProvider);
+
+      if (!aiService.hasApiKey) {
+        final noKeyMessage = MessageEntity(
+          id: const Uuid().v4(),
+          threadId: threadId,
+          role: 'assistant',
+          content: MessageContent(
+            type: MessageContentType.text,
+            text:
+                '⚠ API key belum dikonfigurasi. Buka Settings untuk menambahkan OpenRouter API key.',
+          ),
+          createdAt: DateTime.now().toUtc(),
+          state: MessageState.sent,
+        );
+        await repo.sendMessage(
+          userId: user.uid,
+          threadId: threadId,
+          message: noKeyMessage,
+        );
+        _scrollToBottom();
+        return;
+      }
+
+      final currentMessages =
+          ref.read(messagesProvider(threadId)).valueOrNull ?? [];
+      final prompt = contextBuilder.buildPrompt(messages: currentMessages);
+
+      final aiResponse = await aiService.sendChatCompletion(
+        messages: prompt,
+        model: AppConstants.defaultModel,
+      );
+
+      final assistantMessage = MessageEntity(
+        id: const Uuid().v4(),
+        threadId: threadId,
+        role: 'assistant',
+        content: MessageContent(
+          type: MessageContentType.text,
+          text: aiResponse,
+        ),
+        createdAt: DateTime.now().toUtc(),
+        state: MessageState.sent,
+      );
+
+      await repo.sendMessage(
+        userId: user.uid,
+        threadId: threadId,
+        message: assistantMessage,
+      );
+      _scrollToBottom();
+    } catch (e) {
+      final errorMessage = MessageEntity(
+        id: const Uuid().v4(),
+        threadId: threadId,
+        role: 'assistant',
+        content: MessageContent(
+          type: MessageContentType.text,
+          text: '❌ ${e.toString().replaceAll('Exception: ', '')}',
+        ),
+        createdAt: DateTime.now().toUtc(),
+        state: MessageState.failed,
+      );
+      await repo.sendMessage(
+        userId: user.uid,
+        threadId: threadId,
+        message: errorMessage,
       );
       _scrollToBottom();
     } finally {
@@ -98,7 +173,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       appBar: AppBar(
         leading: Builder(
           builder: (ctx) => IconButton(
-            icon: const Icon(Icons.menu),
+            icon: Icon(FluentIcons.line_horizontal_3_20_regular),
             onPressed: () => Scaffold.of(ctx).openDrawer(),
           ),
         ),
@@ -109,16 +184,19 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         actions: [
           if (user != null)
             Padding(
-              padding: EdgeInsets.only(right: 8.w),
-              child: CircleAvatar(
-                radius: 16.r,
-                backgroundColor: AppColors.surfaceVariant,
-                child: Text(
-                  (user.displayName ?? user.email ?? '?')[0].toUpperCase(),
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
+              padding: EdgeInsets.only(right: 12.w),
+              child: GestureDetector(
+                onTap: () => context.go('/settings'),
+                child: CircleAvatar(
+                  radius: 20.r,
+                  backgroundColor: AppColors.surfaceVariant,
+                  child: Text(
+                    (user.displayName ?? user.email ?? '?')[0].toUpperCase(),
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ),
@@ -155,7 +233,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.auto_awesome,
+              FluentIcons.sparkle_24_regular,
               size: 64.sp,
               color: AppColors.primary.withValues(alpha: 0.5),
             ),

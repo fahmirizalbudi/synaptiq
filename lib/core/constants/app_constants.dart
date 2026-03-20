@@ -13,7 +13,7 @@ class AppConstants {
 
   // OpenRouter API (placeholder)
   static const String openRouterBaseUrl = 'https://openrouter.ai/api/v1';
-  static const String defaultModel = 'openai/gpt-4o-mini';
+  static const String defaultModel = 'deepseek/deepseek-v3.2';
 
   // UI Constants
   static const double designWidth = 393;

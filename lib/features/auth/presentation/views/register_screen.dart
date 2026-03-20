@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -60,7 +61,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          icon: Icon(FluentIcons.arrow_left_24_regular, size: 20),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -89,9 +90,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   controller: _nameController,
                   validator: Validators.name,
                   textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Full name',
-                    prefixIcon: Icon(Icons.person_outline),
+                    prefixIcon: Icon(FluentIcons.person_24_regular),
                   ),
                 ),
                 SizedBox(height: 16.h),
@@ -100,9 +101,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   validator: Validators.email,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Email address',
-                    prefixIcon: Icon(Icons.email_outlined),
+                    prefixIcon: Icon(FluentIcons.mail_24_regular),
                   ),
                 ),
                 SizedBox(height: 16.h),
@@ -113,12 +114,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   textInputAction: TextInputAction.next,
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    prefixIcon: const Icon(Icons.lock_outline),
+                    prefixIcon: Icon(FluentIcons.lock_closed_24_regular),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                            ? FluentIcons.eye_off_24_regular
+                            : FluentIcons.eye_24_regular,
                       ),
                       onPressed: () =>
                           setState(() => _obscurePassword = !_obscurePassword),
@@ -136,12 +137,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   onFieldSubmitted: (_) => _handleRegister(),
                   decoration: InputDecoration(
                     hintText: 'Confirm password',
-                    prefixIcon: const Icon(Icons.lock_outline),
+                    prefixIcon: Icon(FluentIcons.lock_closed_24_regular),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureConfirm
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                            ? FluentIcons.eye_off_24_regular
+                            : FluentIcons.eye_24_regular,
                       ),
                       onPressed: () =>
                           setState(() => _obscureConfirm = !_obscureConfirm),

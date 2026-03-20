@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,7 +38,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final apiKey = ref.watch(apiKeyProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(FluentIcons.arrow_left_24_regular),
+          onPressed: () => context.go('/chat'),
+        ),
+        title: const Text('Settings'),
+      ),
       body: ListView(
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         children: [
@@ -47,12 +54,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               decoration: BoxDecoration(
                 color: AppColors.surface,
                 borderRadius: BorderRadius.circular(16.r),
-                border: Border.all(color: AppColors.border),
               ),
               child: Row(
                 children: [
                   CircleAvatar(
-                    radius: 24.r,
+                    radius: 28.r,
                     backgroundColor: AppColors.surfaceVariant,
                     backgroundImage: user.photoURL != null
                         ? NetworkImage(user.photoURL!)
@@ -100,20 +106,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             obscureText: _obscureKey,
             decoration: InputDecoration(
               hintText: 'OpenRouter API Key',
-              prefixIcon: const Icon(Icons.key_outlined),
+              prefixIcon: Icon(FluentIcons.key_24_regular),
               suffixIcon: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                     icon: Icon(
                       _obscureKey
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
+                          ? FluentIcons.eye_off_24_regular
+                          : FluentIcons.eye_24_regular,
                     ),
                     onPressed: () => setState(() => _obscureKey = !_obscureKey),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.check),
+                    icon: Icon(FluentIcons.checkmark_24_regular),
                     onPressed: () {
                       ref
                           .read(apiKeyProvider.notifier)
@@ -141,7 +147,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               await ref.read(authNotifierProvider.notifier).signOut();
               if (context.mounted) context.go('/login');
             },
-            icon: const Icon(Icons.logout, color: AppColors.error),
+            icon: Icon(FluentIcons.sign_out_24_regular, color: AppColors.error),
             label: const Text(
               'Sign Out',
               style: TextStyle(color: AppColors.error),

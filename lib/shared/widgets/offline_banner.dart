@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,7 +22,11 @@ class OfflineBanner extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.cloud_off, size: 14.sp, color: AppColors.background),
+          Icon(
+            FluentIcons.cloud_off_24_regular,
+            size: 14.sp,
+            color: AppColors.background,
+          ),
           SizedBox(width: 6.w),
           Text(
             'You are offline',

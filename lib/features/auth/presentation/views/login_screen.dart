@@ -1,3 +1,4 @@
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -90,9 +91,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   validator: Validators.email,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     hintText: 'Email address',
-                    prefixIcon: Icon(Icons.email_outlined),
+                    prefixIcon: Icon(FluentIcons.mail_24_regular),
                   ),
                 ),
                 SizedBox(height: 16.h),
@@ -104,12 +105,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   onFieldSubmitted: (_) => _handleEmailLogin(),
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    prefixIcon: const Icon(Icons.lock_outline),
+                    prefixIcon: Icon(FluentIcons.lock_closed_24_regular),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscurePassword
-                            ? Icons.visibility_off_outlined
-                            : Icons.visibility_outlined,
+                            ? FluentIcons.eye_off_24_regular
+                            : FluentIcons.eye_24_regular,
                       ),
                       onPressed: () =>
                           setState(() => _obscurePassword = !_obscurePassword),
@@ -133,10 +134,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         : const Text('Sign In'),
                   ),
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 24.h),
                 Row(
                   children: [
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(
+                      child: Container(
+                        height: 0.5,
+                        color: AppColors.surfaceVariant,
+                      ),
+                    ),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Text(
@@ -144,15 +150,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
-                    const Expanded(child: Divider(color: AppColors.border)),
+                    Expanded(
+                      child: Container(
+                        height: 0.5,
+                        color: AppColors.surfaceVariant,
+                      ),
+                    ),
                   ],
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: 24.h),
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: authState.isLoading ? null : _handleGoogleLogin,
-                    icon: const Icon(Icons.g_mobiledata, size: 24),
+                    icon: Icon(FluentIcons.globe_24_regular, size: 20),
                     label: const Text('Continue with Google'),
                   ),
                 ),
