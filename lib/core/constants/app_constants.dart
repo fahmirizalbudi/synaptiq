@@ -4,7 +4,7 @@ class AppConstants {
 
   // App Info
   static const String appName = 'Synaptiq';
-  static const String appDisplayName = 'Nirmala AI Assistant';
+  static const String appDisplayName = 'Synaptiq AI';
 
   // Firebase Collections
   static const String usersCollection = 'users';

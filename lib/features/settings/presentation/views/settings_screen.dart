@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/services/api_key_repository.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../chat/presentation/providers/chat_providers.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -65,8 +66,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         : null,
                     child: user.photoURL == null
                         ? Text(
-                            (user.displayName ?? user.email ?? '?')[0]
-                                .toUpperCase(),
+                            _getInitials(user.displayName, user.email),
                             style: TextStyle(
                               color: AppColors.primary,
                               fontSize: 20.sp,
@@ -144,6 +144,49 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           SizedBox(height: 32.h),
           OutlinedButton.icon(
             onPressed: () async {
+              showDialog(
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Text('Delete All Chat History'),
+                  content: const Text(
+                    'Are you sure you want to delete all past conversations? This cannot be undone.',
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(ctx).pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        Navigator.of(ctx).pop();
+                        final repo = ref.read(firestoreChatRepositoryProvider);
+                        await repo.deleteAllThreads(user!.uid);
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('All chat history deleted.'),
+                            ),
+                          );
+                        }
+                      },
+                      child: Text(
+                        'Delete All',
+                        style: TextStyle(color: AppColors.error),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+            icon: Icon(FluentIcons.delete_24_regular, color: AppColors.error),
+            label: const Text(
+              'Delete All Chat History',
+              style: TextStyle(color: AppColors.error),
+            ),
+          ),
+          SizedBox(height: 16.h),
+          OutlinedButton.icon(
+            onPressed: () async {
               await ref.read(authNotifierProvider.notifier).signOut();
               if (context.mounted) context.go('/login');
             },
@@ -156,5 +199,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ],
       ),
     );
+  }
+
+  String _getInitials(String? displayName, String? email) {
+    if (displayName != null && displayName.trim().isNotEmpty) {
+      return displayName.trim()[0].toUpperCase();
+    }
+    if (email != null && email.trim().isNotEmpty) {
+      return email.trim()[0].toUpperCase();
+    }
+    return '?';
   }
 }

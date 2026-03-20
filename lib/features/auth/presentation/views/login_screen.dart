@@ -2,6 +2,7 @@ import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
@@ -66,7 +67,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 80.h),
+                SizedBox(height: 64.h),
+                SvgPicture.asset(
+                  'assets/logo.svg',
+                  height: 64.sp,
+                  width: 64.sp,
+                ),
+                SizedBox(height: 24.h),
                 Text(
                   'Welcome to',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
@@ -75,7 +82,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 ),
                 SizedBox(height: 4.h),
                 Text(
-                  'Nirmala',
+                  'Synaptiq',
                   style: Theme.of(context).textTheme.displayLarge,
                 ),
                 SizedBox(height: 8.h),

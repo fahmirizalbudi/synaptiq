@@ -23,6 +23,8 @@ abstract class ChatRepository {
 
   Future<void> deleteThread(String userId, String threadId);
 
+  Future<void> deleteAllThreads(String userId);
+
   Stream<List<MessageEntity>> watchMessages(String userId, String threadId);
 
   Future<MessageEntity> sendMessage({

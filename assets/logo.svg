@@ -1,0 +1,15 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Nodes -->
+<circle cx="80" cy="90" r="16" fill="#E79471"/>
+<circle cx="176" cy="90" r="16" fill="#E79471"/>
+<circle cx="128" cy="116" r="24" fill="#E79471"/>
+<circle cx="80" cy="166" r="16" fill="#E79471"/>
+<circle cx="176" cy="166" r="16" fill="#E79471"/>
+<!-- Connections -->
+<path d="M80 90 L128 116 L176 90" stroke="#E79471" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M80 166 L128 116 L176 166" stroke="#E79471" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M128 48 L128 116" stroke="#E79471" stroke-width="12" stroke-linecap="round"/>
+<path d="M128 116 L128 208" stroke="#E79471" stroke-width="12" stroke-linecap="round"/>
+<path d="M80 90 L80 166" stroke="#E79471" stroke-width="6" stroke-linecap="round" stroke-opacity="0.5"/>
+<path d="M176 90 L176 166" stroke="#E79471" stroke-width="6" stroke-linecap="round" stroke-opacity="0.5"/>
+</svg>

@@ -123,31 +123,62 @@ class ThreadList extends ConsumerWidget {
     WidgetRef ref,
     ThreadEntity thread,
   ) {
-    showDialog(
+    showModalBottomSheet(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Delete Chat'),
-        content: Text('Delete "${thread.title}"?\nThis cannot be undone.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text('Cancel'),
+      backgroundColor: AppColors.surfaceVariant,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Delete Chat Session',
+                style: Theme.of(ctx).textTheme.headlineMedium,
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 16.h),
+              Text(
+                'Are you sure you want to delete "${thread.title}"?\nThis cannot be undone.',
+                style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                  color: AppColors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 24.h),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.error,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () async {
+                  Navigator.of(ctx).pop();
+                  final user = ref.read(authStateProvider).valueOrNull;
+                  if (user == null) return;
+                  final repo = ref.read(firestoreChatRepositoryProvider);
+                  await repo.deleteThread(user.uid, thread.id);
+                  final currentId = ref.read(currentThreadIdProvider);
+                  if (currentId == thread.id) {
+                    ref.read(currentThreadIdProvider.notifier).state = null;
+                  }
+                },
+                child: const Text('Delete'),
+              ),
+              SizedBox(height: 12.h),
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: const Text(
+                  'Cancel',
+                  style: TextStyle(color: AppColors.textPrimary),
+                ),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(ctx).pop();
-              final user = ref.read(authStateProvider).valueOrNull;
-              if (user == null) return;
-              final repo = ref.read(firestoreChatRepositoryProvider);
-              await repo.deleteThread(user.uid, thread.id);
-              final currentId = ref.read(currentThreadIdProvider);
-              if (currentId == thread.id) {
-                ref.read(currentThreadIdProvider.notifier).state = null;
-              }
-            },
-            child: Text('Delete', style: TextStyle(color: AppColors.error)),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -190,12 +221,19 @@ class ThreadList extends ConsumerWidget {
             ),
           ),
           subtitle: Text(
-            '${thread.messageCount} messages',
+            '${thread.messageCount} messages • ${_formatDate(thread.updatedAt)}',
             style: TextStyle(color: AppColors.textSecondary, fontSize: 12.sp),
           ),
-          trailing: Text(
-            _formatDate(thread.updatedAt),
-            style: TextStyle(color: AppColors.textSecondary, fontSize: 11.sp),
+          trailing: IconButton(
+            icon: Icon(
+              FluentIcons.delete_20_regular,
+              color: isSelected ? AppColors.error : AppColors.textSecondary,
+              size: 18.sp,
+            ),
+            onPressed: () => _confirmDelete(context, ref, thread),
+            visualDensity: VisualDensity.compact,
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
           ),
           onTap: () => onThreadSelected(thread.id),
           onLongPress: () => _confirmDelete(context, ref, thread),

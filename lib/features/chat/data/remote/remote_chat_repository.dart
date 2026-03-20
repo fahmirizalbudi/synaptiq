@@ -83,6 +83,17 @@ class FirestoreChatRepository implements ChatRepository {
   }
 
   @override
+  Future<void> deleteAllThreads(String userId) async {
+    final snap = await _threadsRef(userId).get();
+    if (snap.docs.isEmpty) return;
+    final batch = _firestore.batch();
+    for (var doc in snap.docs) {
+      batch.delete(doc.reference);
+    }
+    await batch.commit();
+  }
+
+  @override
   Stream<List<MessageEntity>> watchMessages(String userId, String threadId) {
     return _messagesRef(userId, threadId)
         .orderBy('createdAt')

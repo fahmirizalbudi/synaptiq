@@ -178,7 +178,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
         ),
         title: Text(
-          threadId != null ? 'Nirmala' : 'New Chat',
+          threadId != null ? 'Synaptiq' : 'New Chat',
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         actions: [
@@ -191,7 +191,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   radius: 20.r,
                   backgroundColor: AppColors.surfaceVariant,
                   child: Text(
-                    (user.displayName ?? user.email ?? '?')[0].toUpperCase(),
+                    _getInitials(user.displayName, user.email),
                     style: TextStyle(
                       color: AppColors.primary,
                       fontSize: 16.sp,
@@ -246,7 +246,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
             SizedBox(height: 8.h),
             Text(
-              'Start a conversation with Nirmala',
+              'Start a conversation with Synaptiq',
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
@@ -283,5 +283,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ),
       ),
     );
+  }
+
+  String _getInitials(String? displayName, String? email) {
+    if (displayName != null && displayName.trim().isNotEmpty) {
+      return displayName.trim()[0].toUpperCase();
+    }
+    if (email != null && email.trim().isNotEmpty) {
+      return email.trim()[0].toUpperCase();
+    }
+    return '?';
   }
 }
