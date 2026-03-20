@@ -68,7 +68,7 @@ class _MessageComposerState extends State<MessageComposer> {
                     fontSize: 14.sp,
                   ),
                   decoration: InputDecoration(
-                    hintText: 'Message Nirmala...',
+                    hintText: 'Message Synaptiq...',
                     hintStyle: TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 14.sp,

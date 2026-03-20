@@ -19,7 +19,7 @@ class ContextBuilderService {
       prompt.add({
         'role': 'system',
         'content':
-            'You are Nirmala, a helpful and context-aware AI assistant. '
+            'You are Synaptiq, a helpful and context-aware AI assistant. '
             'You remember the conversation history and provide thoughtful, relevant responses. '
             'Be concise but thorough.',
       });
